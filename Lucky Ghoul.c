@@ -22,6 +22,6 @@ void binarysearch(int *arr, int search, int n) {
 int main() {
     int n;
     while (scanf("%d", &n) != EOF) {
-        }
+    }
     return 0;
 }

@@ -4,17 +4,17 @@
 
 typedef struct _NODE {
     int number;
-    struct _NODE* ptr_to_right_node;
-    struct _NODE* ptr_to_left_node;
+    struct _NODE *ptr_to_right_node;
+    struct _NODE *ptr_to_left_node;
 } Node;
 
-Node* buildTree(int* inorder, int* preorder, int inorderStart, int inorderEnd) {
+Node *buildTree(int *inorder, int *preorder, int inorderStart, int inorderEnd) {
     int preorderIndex = 0;
     if (inorderStart > inorderEnd)
         return NULL;
     int current = preorder[preorderIndex];
     preorderIndex++;
-    Node* node = (Node*)malloc(sizeof(Node));
+    Node *node = (Node *)malloc(sizeof(Node));
     node->number = current;
     node->ptr_to_left_node = NULL;
     node->ptr_to_right_node = NULL;
@@ -30,7 +30,7 @@ Node* buildTree(int* inorder, int* preorder, int inorderStart, int inorderEnd) {
     return node;
 }
 
-void showPostorder(Node* node) {
+void showPostorder(Node *node) {
     if (node == NULL)
         return;
     showPostorder(node->ptr_to_left_node);
@@ -38,7 +38,7 @@ void showPostorder(Node* node) {
     printf("%d ", node->number);
 }
 
-void freeTree(Node* node) {
+void freeTree(Node *node) {
     if (node == NULL)
         return;
     freeTree(node->ptr_to_left_node);
@@ -55,7 +55,7 @@ int main() {
             scanf("%d", &inorder[i]);
         for (int i = 0; i < n; i++)
             scanf("%d", &preorder[i]);
-        Node* root = buildTree(inorder, preorder, 0, n - 1);
+        Node *root = buildTree(inorder, preorder, 0, n - 1);
         printf("testcase%d: ", id++);
         showPostorder(root);
         printf("\n");
