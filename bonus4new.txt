@@ -1,0 +1,24 @@
+s = student_number;
+n = fight_number;
+make s become 2^i * k;
+long long calculateMatches(long long students);
+input n;
+int min;
+for(i in [0:63]){
+    k=binary-search(i);//by s = 2^i *k;calculateMatches(2^i *k);
+    min = min(k,in);
+}
+
+long long calculateMatches(long long students) {
+    long long matches = 0;
+    while (students > 1) {
+        if (students % 2 == 0) {
+            matches += students / 2;
+            students /= 2;
+        } else {
+            matches += students * (students - 1) / 2;
+            break;
+        }
+    }
+    return matches;
+}
