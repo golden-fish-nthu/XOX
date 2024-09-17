@@ -39,6 +39,7 @@ void erase1(Node** head, int n) {
     temp->next = toDelete->next;
     free(toDelete);
 }
+
 void erase2(Node** head, char* color) {
     Node* temp = *head;
     Node* prev = NULL;
