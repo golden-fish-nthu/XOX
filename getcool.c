@@ -1,9 +1,9 @@
 #include <stdio.h>
 #define ll long long
 #define max 2000002
-ll arr[max];
+int arr[max];
 ll prefix[max];
-void prefixSum(int n, ll a[], ll prefix[]) {
+void prefixSum(int n, int a[], ll prefix[]) {
     prefix[1] = a[1];
     for (int i = 2; i <= n; i++)
         prefix[i] = prefix[i - 1] + a[i];
@@ -17,12 +17,13 @@ ll sum(int a, int b, int n, ll prefix[]) {
         return arr[a];
 }
 int main() {
-    int n, q, a, b, max_a = 1, max_b = 1;
+    int n, q, a, b;
+    int max_a = 1, max_b = 1;
     ll max_sum = -1;
     while (scanf("%d %d", &n, &q) != EOF) {
         arr[0] = 0;
         for (int i = 1; i <= n; i++)
-            scanf("%lld", &arr[i]);
+            scanf("%d", &arr[i]);
         prefixSum(n, arr, prefix);
         max_sum = -1, max_a = 1, max_b = 1;
         for (int i = 0; i < q; i++) {
