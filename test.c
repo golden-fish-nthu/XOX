@@ -12,5 +12,6 @@ int main() {
     for (long long i = 0; i < 12; i++) {
         printf("%lld  ", data[i]);
     }
+	printf("\n");
     return 0;
 }
