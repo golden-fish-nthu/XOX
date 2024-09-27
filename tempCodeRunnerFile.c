@@ -1,36 +1,100 @@
 #include <stdio.h>
-#define MAXN 100000000
-#define ll long long
+#include <stdlib.h>
 
-ll min(ll a, ll b) {
-    return ((a > b) ? b : a);
+typedef struct Node {
+    char data;
+    struct Node *left;
+    struct Node *right;
+} Node;
+
+Node *newNode(char data) {
+    Node *node = (Node *)malloc(sizeof(Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
 }
-ll countTriangles(ll A, ll B, ll C, ll D) {  // 用差分
-    ll f[MAXN] = {0};
-    ll count = 0;
-    for (ll x = A; x <= B; x++)
-        f[x + B] += 1, f[x + C + 1] += -1;
 
-    for (ll i = A + B; i <= B + C + 1; i++)
-        f[i] += f[i - 1];
-
-    for (ll i = A + B; i <= B + C; i++) {
-        if (i <= C)
-            continue;
-        ll lo = C;
-        ll hi = min(i - 1, D);
-        count += f[i] * (hi - lo + 1);
+int search(char arr[], int strt, int end, char value) {
+    for (int i = strt; i <= end; i++) {
+        if (arr[i] == value)
+            return i;
     }
-    return count;
+    return -1;
 }
+
+Node *buildTree(char pre[], char post[], int *preIndex, int l, int h, int size) {
+    if (*preIndex >= size || l > h)
+        return NULL;
+
+    Node *root = newNode(pre[*preIndex]);
+    ++(*preIndex);
+
+    if (l == h || *preIndex >= size)
+        return root;
+
+    int i = search(post, l, h, pre[*preIndex]);
+
+    if (i <= h) {
+        root->left = buildTree(pre, post, preIndex, l, i, size);
+        root->right = buildTree(pre, post, preIndex, i + 1, h - 1, size);
+    }
+
+    return root;
+}
+
+void printPreorder(Node *node) {
+    if (node == NULL)
+        return;
+    printf("%c ", node->data);
+    printPreorder(node->left);
+    printPreorder(node->right);
+}
+
+void printPostorder(Node *node) {
+    if (node == NULL)
+        return;
+    printPostorder(node->left);
+    printPostorder(node->right);
+    printf("%c ", node->data);
+}
+
+void findSingleChildNodes(Node *node) {
+    if (node == NULL)
+        return;
+    if ((node->left == NULL && node->right != NULL) || (node->left != NULL && node->right == NULL)) {
+        printf("%c ", node->data);
+    }
+    findSingleChildNodes(node->left);
+    findSingleChildNodes(node->right);
+}
+
 int main() {
-    ll T = 1;
-    scanf("%d", &T);
-    while (T--) {
-        ll A = 1, B = 2, C = 3, D = 4;
-        scanf("%d %d %d %d", &A, &B, &C, &D);
-        ll result = countTriangles(A, B, C, D);
-        printf("%d\n", result);
+    int n;
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+
+    char pre[n], post[n];
+    printf("Enter the preorder traversal: ");
+    for (int i = 0; i < n; i++) {
+        scanf(" %c", &pre[i]);
     }
+
+    printf("Enter the postorder traversal: ");
+    for (int i = 0; i < n; i++) {
+        scanf(" %c", &post[i]);
+    }
+
+    int preIndex = 0;
+    Node *root = buildTree(pre, post, &preIndex, 0, n - 1, n);
+
+    printf("Nodes with only one child: \n");
+    findSingleChildNodes(root);
+
+    printf("\nPreorder of the constructed tree: \n");
+    printPreorder(root);
+
+    printf("\nPostorder of the constructed tree: \n");
+    printPostorder(root);
+
     return 0;
 }
