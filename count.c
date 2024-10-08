@@ -1,28 +1,31 @@
-#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define ll long long
+long long cntdigit(long long n, long long digit) {
+    long long j;                           // pointer
+    long long res = 0;                     // 暫存器
+    for (j = 1; n / j; j *= 10) {          // 位數進位
+        long long curdigit = (n / j) % 10; // 目前計算的位數
+        res += (n / j / 10) * j;
+        if (curdigit > digit) // 判斷是不是特例(舉例來說 346 -->找3 會剩)
+            res += j;
+        else if (curdigit == digit) // 313找3
+            res += n % j + 1;
 
+        if (digit == 0) // 301找3
+            res -= j;
+    }
+    return res;
+}
 int main() {
-    int a, b, c;
-    printf("Enter three integers: ");
-    scanf("%d %d %d", &a, &b, &c);
-
-    // (2) 若a大於等於60且小於100則輸出1，否則輸出0。
-    if (a >= 60 && a < 100) {
-        printf("1\n");
-    } else {
-        printf("0\n");
+    int i;
+    scanf("%d", &i);
+    while (i--) {
+        long long a, b;
+        long long tar = 1;
+        scanf("%lld %lld", &a, &b);
+        long long res = cntdigit(b, tar) - cntdigit(a - 1, tar);
+        printf("%lld\n", res);
     }
-
-    // (3) 計算b+1再除以10的值，四捨五入至小數點後第二位。
-    double result = (b + 1) / 10.0;
-    printf("%.2f\n", round(result * 100) / 100);
-
-    // (4) 若a大於等於c，則輸出a，否則輸出c。
-    if (a >= c) {
-        printf("%d\n", a);
-    } else {
-        printf("%d\n", c);
-    }
-
-    return 0;
 }
