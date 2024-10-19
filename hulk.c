@@ -10,7 +10,7 @@ typedef struct {
 } HashNode;
 
 typedef struct {
-    HashNode* nodes;
+    HashNode *nodes;
     int size;
 } HashMap;
 
@@ -18,14 +18,14 @@ unsigned int hash(int key, int size) {
     return (unsigned int)key % size;
 }
 
-HashMap* createHashMap(int size) {
-    HashMap* map = (HashMap*)malloc(sizeof(HashMap));
-    map->nodes = (HashNode*)calloc(size, sizeof(HashNode));
+HashMap *createHashMap(int size) {
+    HashMap *map = (HashMap *)malloc(sizeof(HashMap));
+    map->nodes = (HashNode *)calloc(size, sizeof(HashNode));
     map->size = size;
     return map;
 }
 
-void insert(HashMap* map, int key) {
+void insert(HashMap *map, int key) {
     unsigned int index = hash(key, map->size);
     while (map->nodes[index].count != 0 && map->nodes[index].key != key) {
         index = (index + 1) % map->size;
@@ -36,7 +36,7 @@ void insert(HashMap* map, int key) {
     map->nodes[index].count++;
 }
 
-int getCount(HashMap* map, int key) {
+int getCount(HashMap *map, int key) {
     unsigned int index = hash(key, map->size);
     while (map->nodes[index].count != 0) {
         if (map->nodes[index].key == key) {
@@ -47,7 +47,7 @@ int getCount(HashMap* map, int key) {
     return 0;
 }
 
-void freeHashMap(HashMap* map) {
+void freeHashMap(HashMap *map) {
     free(map->nodes);
     free(map);
 }
@@ -59,7 +59,7 @@ int main() {
     scanf("%d", &n);
 
     // 初始化哈希表
-    HashMap* map = createHashMap(n * 2);  // 使用兩倍大小的哈希表來減少碰撞
+    HashMap *map = createHashMap(n * 2); // 使用兩倍大小的哈希表來減少碰撞
 
     // 讀取序列 a 並計算每個數字的出現次數
     for (int i = 0; i < n; i++) {
