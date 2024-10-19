@@ -8,12 +8,10 @@ int main() {
     for (int i = 0; i < box; i++)
         scanf("%d", &boxs[i]);
     pre[0] = ((boxs[0] >= 0) ? boxs[0] : 0);
-    for (int i = 1; i < box; i++) {
+    for (int i = 1; i < box; i++)
         pre[i] = ((boxs[i] >= 0) ? (boxs[i] + pre[i - 1]) : pre[i - 1]);
-    }
-    for (int i = 0; i < box; i++) {
+    for (int i = 0; i < box; i++)
         printf("%d ", pre[i]);
-    }
     putchar('\n');
     for (int i = 0; i < time; i++) {
         int head, end, num;
