@@ -3,19 +3,19 @@
 #include <string.h>
 
 typedef struct Node {
-    char data;
+    int data;
     struct Node *left;
     struct Node *right;
 } Node;
 
-Node *newNode(char data) {
+Node *newNode(int data) {
     Node *node = (Node *)malloc(sizeof(Node));
     node->data = data;
     node->left = node->right = NULL;
     return node;
 }
 
-int search(char arr[], int strt, int end, char value) {
+int search(int arr[], int strt, int end, int value) {
     for (int i = strt; i <= end; i++) {
         if (arr[i] == value)
             return i;
@@ -23,7 +23,7 @@ int search(char arr[], int strt, int end, char value) {
     return -1;
 }
 
-Node *buildTree(char in[], char pre[], int inStrt, int inEnd, int *preIndex) {
+Node *buildTree(int in[], int pre[], int inStrt, int inEnd, int *preIndex) {
     if (inStrt > inEnd)
         return NULL;
 
@@ -47,43 +47,53 @@ void printPostOrder(Node *node) {
 
     printPostOrder(node->left);
     printPostOrder(node->right);
-    printf("%c", node->data);
+    printf("%d ", node->data);
+}
+
+void getPostOrder(Node *node, int postOrder[], int *idx) {
+    if (node == NULL)
+        return;
+    getPostOrder(node->left, postOrder, idx);
+    getPostOrder(node->right, postOrder, idx);
+    postOrder[(*idx)++] = node->data;
 }
 
 int main() {
     int n, s;
     scanf("%d", &n);
 
-    char pre[n + 1], post[n + 1];
-    scanf("%s %s", pre, post);
+    int pre[100000], post[100000];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &pre[i]);
+    }
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &post[i]);
+    }
 
     scanf("%d", &s);
 
     for (int i = 0; i < s; i++) {
-        char in[n + 1];
-        scanf("%s", in);
+        int in[n];
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &in[j]);
+        }
 
         int preIndex = 0;
         Node *root = buildTree(in, pre, 0, n - 1, &preIndex);
 
-        char result[n + 1];
-        result[0] = '\0';
-        printPostOrder(root);
-        printf("\n");
-
-        char postOrder[n + 1];
+        int postOrder[n];
         int idx = 0;
-        void getPostOrder(Node * node) {
-            if (node == NULL)
-                return;
-            getPostOrder(node->left);
-            getPostOrder(node->right);
-            postOrder[idx++] = node->data;
-        }
-        getPostOrder(root);
-        postOrder[idx] = '\0';
+        getPostOrder(root, postOrder, &idx);
 
-        if (strcmp(postOrder, post) == 0) {
+        int isSame = 1;
+        for (int j = 0; j < n; j++) {
+            if (postOrder[j] != post[j]) {
+                isSame = 0;
+                break;
+            }
+        }
+
+        if (isSame) {
             printf("yes\n");
         } else {
             printf("no\n");
