@@ -83,10 +83,14 @@ int main() {
 
         int preIndex = 0;
         Node *root = buildTree(in, pre, 0, n - 1, &preIndex);
+<<<<<<< HEAD
         if (root == NULL) {
             printf("no\n");
             continue;
         }
+=======
+
+>>>>>>> 6b230209723436362f628e24bd5e10ab760d65c3
         int postOrder[n];
         int idx = 0;
         getPostOrder(root, postOrder, &idx);
