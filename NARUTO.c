@@ -10,7 +10,9 @@ struct Node {
 };
 
 int oper(char* token) {
-    return (strcmp(token, "+") == 0 || strcmp(token, "-") == 0 || strcmp(token, "*") == 0 || strcmp(token, "/") == 0);
+    if (strcmp(token, "+") == 0 || strcmp(token, "-") == 0 || strcmp(token, "*") == 0 || strcmp(token, "/") == 0)
+        return 1;
+    return 0;
 }
 
 struct Node* buildTree(char** tokens) {
@@ -30,7 +32,7 @@ int calculate(struct Node* node, int x, int y, int z) {
     if (node == NULL)
         return 0;
     if (node->left == NULL && node->right == NULL) {
-        if (strcmp(node->value, "x") == 0)
+        if (strcmp(node->value, "x") == 0)  // calculator 付值
             return x;
         else if (strcmp(node->value, "y") == 0)
             return y;
@@ -70,7 +72,6 @@ int main() {
     }
     int x, y, z;
     scanf("%d %d %d", &x, &y, &z);
-
     struct Node* root = buildTree(tokens);
     inorder(root);
     int result = calculate(root, x, y, z);
