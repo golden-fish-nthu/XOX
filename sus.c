@@ -2,17 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct Node {
-    int data;
-    struct Node* left;
-    struct Node* right;
-} Node;
+#define MAX_NODES 1000
 
-Node* newNode(int data) {
-    Node* node = (Node*)malloc(sizeof(Node));
-    node->data = data;
-    node->left = node->right = NULL;
-    return node;
+int tree[MAX_NODES][2];
+int nodeData[MAX_NODES];
+int nodeCount = 0;
+
+int newNode(int data) {
+    int index = nodeCount++;
+    nodeData[index] = data;
+    tree[index][0] = tree[index][1] = -1;
+    return index;
 }
 
 int search(int arr[], int strt, int end, int value) {
@@ -23,43 +23,37 @@ int search(int arr[], int strt, int end, int value) {
     return -1;
 }
 
-Node* buildTree(int in[], int pre[], int inStrt, int inEnd, int* preIndex) {
+int buildTree(int in[], int pre[], int inStrt, int inEnd, int* preIndex) {
     if (inStrt > inEnd)
-        return NULL;
-    Node* tNode = newNode(pre[*preIndex]);
+        return -1;
+    int nodeIndex = newNode(pre[*preIndex]);
     (*preIndex)++;
 
     if (inStrt == inEnd)
-        return tNode;
-    int inIndex = search(in, inStrt, inEnd, tNode->data);
+        return nodeIndex;
+    int inIndex = search(in, inStrt, inEnd, nodeData[nodeIndex]);
     if (inIndex == -1) {
-        free(tNode);
-        return NULL;
+        nodeCount--;
+        return -1;
     }
-    tNode->left = buildTree(in, pre, inStrt, inIndex - 1, preIndex);
-    tNode->right = buildTree(in, pre, inIndex + 1, inEnd, preIndex);
+    tree[nodeIndex][0] = buildTree(in, pre, inStrt, inIndex - 1, preIndex);
+    tree[nodeIndex][1] = buildTree(in, pre, inIndex + 1, inEnd, preIndex);
 
-    return tNode;
+    return nodeIndex;
 }
 
-void printPostOrder(Node* node) {
-    if (node == NULL)
+void getPostOrder(int nodeIndex, int postOrder[], int* idx) {
+    if (nodeIndex == -1)
         return;
-    printPostOrder(node->left);
-    printPostOrder(node->right);
-    printf("%d ", node->data);
-}
-
-void getPostOrder(Node* node, int postOrder[], int* idx) {
-    if (node == NULL)
-        return;
-    getPostOrder(node->left, postOrder, idx);
-    getPostOrder(node->right, postOrder, idx);
-    postOrder[(*idx)++] = node->data;
+    getPostOrder(tree[nodeIndex][0], postOrder, idx);
+    getPostOrder(tree[nodeIndex][1], postOrder, idx);
+    postOrder[(*idx)++] = nodeData[nodeIndex];
 }
 
 int main() {
     int n, s;
+    int p;
+    scanf("%d", &p);
     scanf("%d", &n);
     int pre[100000], post[100000];  // 前序 後序
     for (int i = 0; i < n; i++)
@@ -72,14 +66,15 @@ int main() {
         for (int j = 0; j < n; j++)
             scanf("%d", &in[j]);
         int preIndex = 0;
-        Node* root = buildTree(in, pre, 0, n - 1, &preIndex);
-        if (root == NULL) {
+        nodeCount = 0;
+        int rootIndex = buildTree(in, pre, 0, n - 1, &preIndex);
+        if (rootIndex == -1) {
             printf("no\n");
             continue;
         }
         int postOrder[n];
         int idx = 0;
-        getPostOrder(root, postOrder, &idx);
+        getPostOrder(rootIndex, postOrder, &idx);
         int isSame = 1;
         for (int j = 0; j < n; j++) {
             if (postOrder[j] != post[j]) {

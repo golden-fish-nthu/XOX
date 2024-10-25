@@ -83,12 +83,10 @@ int main() {
             if (query_heatstroke(root, x)) {
                 printf("We might as well eat it.\n");
                 eat_rat(&root, x);
-            } else {
+            } else
                 printf("No dinner tonight.\n");
-            }
-        } else if (strcmp(operation, "buy") == 0) {
+        } else if (strcmp(operation, "buy") == 0)
             buy_rat(&root, x);
-        }
     }
     free(arr);
     return 0;
