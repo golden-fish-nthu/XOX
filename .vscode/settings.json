@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "iostream": "cpp",
         "ctype.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "cmath": "cpp"
     }
 }
