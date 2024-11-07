@@ -11,7 +11,7 @@ struct CatToast {
 vector<CatToast> catToasts;
 int n, r;
 
-inline int distanceSquared(const CatToast& a, const CatToast& b) {
+int distanceSquared(CatToast a, CatToast b) {
     int dx = a.x - b.x;
     int dy = a.y - b.y;
     return dx * dx + dy * dy;
@@ -31,10 +31,13 @@ int main() {
     int blackHoles = 0;
     int remainingCatToasts = 0;
     cin >> n >> r;
-    catToasts.resize(n);
 
-    for (int i = 0; i < n; i++)
-        cin >> catToasts[i].x >> catToasts[i].y;
+    CatToast ct;
+    for (int i = 0; i < n; i++) {
+        cin >> ct.x >> ct.y;
+        ct.visited = false;
+        catToasts.push_back(ct);
+    }
 
     for (int i = 0; i < n; ++i) {
         if (!catToasts[i].visited) {

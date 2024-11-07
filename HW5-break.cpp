@@ -8,9 +8,7 @@ using namespace std;
 set<int> mySet;
 
 // 函式宣告
-void insert(int value);
 void print();
-void findMin();
 void rangeErase(int l, int r);
 void findSum();
 
@@ -23,12 +21,13 @@ int main() {
         if (command == "insert") {
             int value;
             cin >> value;
-            insert(value);  // 插入元素
+            mySet.insert(value);  // 插入元素
         } else if (command == "print")
             print();  // 列出所有元素
-        else if (command == "min")
-            findMin();  // 找出最小值
-        else if (command == "range_erase") {
+        else if (command == "min") {
+            if (!mySet.empty())
+                cout << *mySet.begin() << endl;  // 輸出最小值 // 找出最小值
+        } else if (command == "range_erase") {
             int l, r;
             cin >> l >> r;
             rangeErase(l, r);  // 刪除範圍內的元素
@@ -39,23 +38,13 @@ int main() {
     return 0;
 }
 
-void insert(int value) {
-    mySet.insert(value);
-}
-
 void print() {
-    if (!mySet.empty()) {
-        bool first = true;  // 標記是否為第一個元素
-        for (int i : mySet) {
-            cout << (first ? "" : " ") << i;  // 第一個元素前不加空格，之後的元素前加空格
-            first = false;                    // 設定 first 為 false
-        }
-        cout << endl;  // 換行
+    for (auto it = mySet.begin(); it != mySet.end(); ++it) {
+        if (it != mySet.begin())
+            cout << " ";
+        cout << *it;
     }
-}
-void findMin() {
-    if (!mySet.empty())
-        cout << *mySet.begin() << endl;  // 輸出最小值
+    cout << endl;
 }
 
 void rangeErase(int l, int r) {
