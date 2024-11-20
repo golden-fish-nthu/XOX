@@ -32,11 +32,10 @@ int main() {
     int remainingCatToasts = 0;
     cin >> n >> r;
 
-    CatToast ct;
+    catToasts.resize(n);
     for (int i = 0; i < n; i++) {
-        cin >> ct.x >> ct.y;
-        ct.visited = false;
-        catToasts.push_back(ct);
+        cin >> catToasts[i].x >> catToasts[i].y;
+        catToasts[i].visited = false;
     }
 
     for (int i = 0; i < n; ++i) {
