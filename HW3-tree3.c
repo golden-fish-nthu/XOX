@@ -1,26 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define ri ptr_to_right_node
-#define le ptr_to_left_node
-int preIndex = 0;
+
 typedef struct _NODE {
     int number;
-    struct _NODE* ptr_to_right_node;
-    struct _NODE* ptr_to_left_node;
+    struct _NODE *ptr_to_right_node;
+    struct _NODE *ptr_to_left_node;
 } Node;
-int search(int* arr, int start, int end, int value) {
+
+#define ri ptr_to_right_node
+#define le ptr_to_left_node
+
+int search(int *arr, int start, int end, int value) {
     for (int i = start; i <= end; i++)
         if (arr[i] == value)
             return i;
     return -1;
 }
-Node* buildTree(int* Inorder, int* Preorder, int insrt, int inend) {
+int preIndex = 0;
+Node *buildTree(int *Inorder, int *Preorder, int insrt, int inend) {
     if (insrt > inend)
         return NULL;
-    Node* root = (Node*)malloc(sizeof(Node));
-    root->number = Preorder[preIndex];
-    (preIndex)++;
+    Node *root = (Node *)malloc(sizeof(Node));
+    root->number = Preorder[preIndex++];
     root->le = NULL, root->ri = NULL;
     if (insrt == inend)
         return root;
@@ -32,7 +34,7 @@ Node* buildTree(int* Inorder, int* Preorder, int insrt, int inend) {
     return root;
 }
 
-void showPostorder(Node* node) {
+void showPostorder(Node *node) {
     if (node == NULL)
         return;
     showPostorder(node->le);
@@ -40,7 +42,7 @@ void showPostorder(Node* node) {
     printf("%d ", node->number);
 }
 
-void freeTree(Node* node) {
+void freeTree(Node *node) {
     preIndex = 0;
     if (node == NULL)
         return;
@@ -63,14 +65,14 @@ int main() {
     // scanf("%d", &preorder[i]);
     int preIndex = 0;
 
-    Node* root = buildTree(inorder, preorder, 0, n - 1);
+    Node *root = buildTree(inorder, preorder, 0, n - 1);
     printf("testcase%d: ", id++);
     showPostorder(root);
     printf("\n");
     freeTree(root);
 
     preIndex = 0;
-    Node* root2 = buildTree(inorder1, preorder1, 0, m - 1);
+    Node *root2 = buildTree(inorder1, preorder1, 0, m - 1);
     printf("testcase%d: ", id++);
     showPostorder(root2);
     printf("\n");
