@@ -1,4 +1,3 @@
-#define adjust(x) (((x) % 10007 + 10007) % 10007)
 #include <cstring>
 #include <iomanip>
 #include <iostream>
@@ -6,6 +5,7 @@
 using namespace std;
 const int MAX_N = 102;
 const int MAX_N = 102;
+#define adjust(x) (((x) % 10007 + 10007) % 10007)
 class Matrix {
    public:
     Matrix() {
@@ -56,7 +56,9 @@ class Matrix {
 Matrix::Matrix(int r, int c) {
     this->row = r;
     this->col = c;
-    memset(mat, 0, sizeof(mat));
+    for (int i = 0; i < r; i++)
+        for (int j = 0; j < c; j++)
+            mat[i][j] = 0;
 }
 
 int* Matrix::operator[](const int& x) {
@@ -65,18 +67,17 @@ int* Matrix::operator[](const int& x) {
 
 Matrix Matrix::operator+(const Matrix& x) const {
     Matrix result(row, col);
-    for (size_t i = 0; i < row; i++)
-        for (size_t j = 0; j < col; j++)
+    for (int i = 0; i < row; i++)
+        for (int j = 0; j < col; j++)
             result[i][j] = adjust(mat[i][j] + x[i][j]);
     return result;
 }
 
 Matrix operator*(const Matrix& x, const Matrix& y) {
     Matrix result(x.row, y.col);
-    for (size_t i = 0; i < x.row; i++)
-        for (size_t j = 0; j < y.col; j++)
-            for (size_t k = 0; k < x.col; k++)
+    for (int i = 0; i < x.row; i++)
+        for (int j = 0; j < y.col; j++)
+            for (int k = 0; k < x.col; k++)
                 result[i][j] = adjust(result[i][j] + x[i][k] * y[k][j]);
-
     return result;
 }
