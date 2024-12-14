@@ -1,5 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+int res = 0;
+typedef struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+} Node;
 
 int fastPow(int base, int exp) {
     int result = 1;
@@ -12,94 +18,75 @@ int fastPow(int base, int exp) {
     }
     return result;
 }
+Node* newNode(int data) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
 
-int *findSingleChildNodes(int *preorder, int *postorder, int preStart, int preEnd, int postStart, int postEnd,
-                          int *count) {
-    // 當 preStart >= preEnd 或 postStart >= postEnd 時，返回空陣列
-    if (preStart >= preEnd || postStart >= postEnd) {
+int search(int arr[], int strt, int end, int value) {
+    for (int i = strt; i <= end; i++) {
+        if (arr[i] == value)
+            return i;
+    }
+    return -1;
+}
+
+Node* buildTree(int pre[], int post[], int* preIndex, int l, int h, int size) {
+    if (*preIndex >= size || l > h)
         return NULL;
-    }
-    // 印出當前子樹的前序和後序
-    printf("Current subtree preorder: ");
-    for (int i = preStart; i < preEnd; i++) {
-        printf("%d ", preorder[i]);
-    }
-    printf("\n");
 
-    printf("Current subtree postorder: ");
-    for (int i = postStart; i < postEnd; i++) {
-        printf("%d ", postorder[i]);
-    }
-    printf("\n");
-    int *result = (int *)malloc((preEnd - preStart) * sizeof(int));
-    int resultIndex = 0;
+    Node* root = newNode(pre[*preIndex]);
+    ++(*preIndex);
 
-    // 當preorder的下一個節點是postorder的倒數第二個節點，表示只有一個子節點
-    if (preorder[preStart + 1] == postorder[postEnd - 2]) {
-        // 有一個子節點的情況
-        result[resultIndex++] = preorder[preStart];
-        (*count)++;
+    if (l == h || *preIndex >= size)
+        return root;
+
+    int i = search(post, l, h, pre[*preIndex]);
+
+    if (i <= h) {
+        root->left = buildTree(pre, post, preIndex, l, i, size);
+        root->right = buildTree(pre, post, preIndex, i + 1, h - 1, size);
     }
 
-    // 分割子樹並遞迴處理
-    int leftSubtreeSize = 0;
-    for (int i = postStart; i < postEnd; i++) {
-        if (postorder[i] == preorder[preStart + 1]) {
-            leftSubtreeSize = i - postStart + 1;
-            break;
-        }
+    return root;
+}
+
+void findSingleChildNodes(Node* node) {
+    if (node == NULL)
+        return;
+    if ((node->left == NULL && node->right != NULL) || (node->left != NULL && node->right == NULL)) {
+        // printf("%d ", node->data);
+        res++;
     }
-
-    int leftCount = 0;
-    int *leftResult = findSingleChildNodes(preorder, postorder, preStart + 1, preStart + leftSubtreeSize, postStart,
-                                           postStart + leftSubtreeSize - 1, &leftCount);
-
-    int rightCount = 0;
-    int *rightResult = findSingleChildNodes(preorder, postorder, preStart + leftSubtreeSize + 1, preEnd,
-                                            postStart + leftSubtreeSize, postEnd - 1, &rightCount);
-
-    // 合併結果
-    for (int i = 0; i < leftCount; i++) {
-        result[resultIndex++] = leftResult[i];
-    }
-    for (int i = 0; i < rightCount; i++) {
-        result[resultIndex++] = rightResult[i];
-    }
-
-    *count += leftCount + rightCount;
-
-    free(leftResult);
-    free(rightResult);
-
-    return result;
+    findSingleChildNodes(node->left);
+    findSingleChildNodes(node->right);
 }
 
 int main() {
     int n;
     while (scanf("%d", &n) != EOF) {
-        int preorder[n];
-        int postorder[n];
-
+        res = 0;
+        int pre[n], post[n];
+        // printf("Enter the preorder traversal: ");
         for (int i = 0; i < n; i++) {
-            scanf("%d", &preorder[i]);
+            scanf(" %d", &pre[i]);
         }
 
+        // printf("Enter the postorder traversal: ");
         for (int i = 0; i < n; i++) {
-            scanf("%d", &postorder[i]);
+            scanf(" %d", &post[i]);
         }
 
-        int count = 0;
-        int *singleChildNodes = findSingleChildNodes(preorder, postorder, 0, n, 0, n, &count);
+        int preIndex = 0;
+        Node* root = buildTree(pre, post, &preIndex, 0, n - 1, n);
 
-        if (count > 0) {
-            int result = fastPow(2, count - 1);
-            printf("%d\n", result);
-        } else {
-            printf("0\n");
-        }
-
-        free(singleChildNodes);
+        // printf("Nodes with only one child: \n");
+        findSingleChildNodes(root);
+        // printf("%d\n", res);
+        int ans = fastPow(2, res);
+        printf("%d\n", ans);
     }
-
     return 0;
 }
